@@ -2,9 +2,11 @@ def print_header
   puts "The students of my cohort at Makers Academy"
   puts "-------------"
 end
-def print(students)  
-  students.each_with_index do |student, i|
-    puts "#{i + 1}. #{student[:name]} (#{student[:cohort]} cohort)" if student[:name].size < 12
+def print(students)
+  counter = 0
+  while students.length > counter
+    puts "#{counter + 1}. #{students[counter][:name]} (#{students[counter][:cohort]} cohort)" if students[counter][:name].size < 12
+    counter += 1
   end
 end
 def print_footer(names)
