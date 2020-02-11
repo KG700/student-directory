@@ -22,35 +22,27 @@ def print_footer(students)
 end
 
 def input_students
-  puts "Please enter the names of the students"
-  puts "to edit any of your entries type 'edit' and to finish, just hit return twice"
 
   students = []
-  #get the first name & cohort
-  name = gets.delete "\n"
-  cohort = get_cohort
-  height = get_height
-  cob = get_country_of_birth
-  
-  #while the name is not empty, repeat this code
-  while !name.empty? do
-    #add the student hash to the array
-    students << {name: name, cohort: cohort, height: height, cob: cob} if name != 'edit'
-    puts "Now we have #{students.size} student#{'s' if students.size > 1}"
-    print(students)
-    puts "Please enter the names of the students (or type 'edit' or hit return twice to finish)"
-    name = gets.chomp
+
+  loop do
+    name = get_name
+    break if name.empty?
+    
     if name == 'edit'
       edit_input(students)
-    elsif !name.empty?
-      cohort = get_cohort
-      height = get_height
-      cob = get_country_of_birth
-      
+    else
+      students << {name: name, cohort: get_cohort, height: get_height, cob: get_country_of_birth}
     end
+
+    puts "Now we have #{students.size} student#{'s' if students.size > 1}"
+    print(students)
+
   end
   students
 end
+  
+
 
 def edit_input(students)
   puts "Enter the number of the student you would like to edit"
@@ -62,6 +54,9 @@ def edit_input(students)
 end
 
 def get_name
+  puts "Please enter the names of the students"
+  puts "to edit any of your entries type 'edit' and to finish, just hit return twice"
+  name = gets.delete "\n"
 end
 
 def get_cohort
