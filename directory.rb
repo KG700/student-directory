@@ -70,7 +70,7 @@ def input_students
     if name == 'edit'
       edit_input
     else
-      @students << {name: name, cohort: get_cohort, height: get_height, cob: get_country_of_birth}
+      update_students(name, get_cohort, get_height, get_country_of_birth)
     end
 
     puts "Now we have #{@students.size} student#{'s' if @students.size > 1}"
@@ -88,6 +88,10 @@ def edit_input
   update = STDIN.gets.chomp
   puts "You have entered '#{@students[number - 1][update.to_sym]}'. What would you like to change this to?"
   @students[number - 1][update.to_sym] = STDIN.gets.chomp
+end
+
+def update_students(name, cohort, height, cob)
+  @students << {name: name, cohort: cohort, height: height, cob: cob}
 end
 
 def get_name
@@ -131,7 +135,7 @@ def save_students
   file = File.open("students.csv", "w")
   # iterate over the array of students
   @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
+    student_data = [student[:name], student[:cohort], student[:height], student[:cob]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
@@ -141,16 +145,18 @@ end
 def load_students( filename = "students.csv" )
   file = File.open(filename, "r")
   file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym, height: 0, cob: "NA"}
+    name, cohort, height, cob = line.chomp.split(',')
+    update_students(name, cohort.to_sym, height.to_i, cob)
   end
   file.close
 end
 
 def try_load_students
   filename = ARGV.first #first argument from the command line
-  return if filename.nil? # get out of the method if it isn't given
-  if File.exists? (filename)
+  return if filename.nil? && !File.exists?("students.csv") # get out of the method if it isn't given
+  if filename.nil? && File.exists?("students.csv")
+    load_students
+  elsif File.exists? (filename)
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
   else # if it doesn't exist
