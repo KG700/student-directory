@@ -131,8 +131,9 @@ def get_country_of_birth
 end
 
 def save_students
-  # open the file for writing
-  file = File.open("students.csv", "w")
+  puts "Save file as:"
+  filename = STDIN.gets.chomp + ".csv"
+  file = File.open(filename, "w")
   # iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort], student[:height], student[:cob]]
@@ -140,15 +141,25 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "File has been saved as: #{filename}"
 end
 
-def load_students( filename = "students.csv" )
+def load_students( filename = get_filename )
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort, height, cob = line.chomp.split(',')
     update_students(name, cohort.to_sym, height.to_i, cob)
   end
   file.close
+end
+
+def get_filename
+  puts "Load file:"
+  while true do
+    filename = gets.chomp + '.csv'
+    break if File.exists? filename
+  end
+  filename
 end
 
 def try_load_students
