@@ -133,24 +133,26 @@ end
 def save_students
   puts "Save file as:"
   filename = STDIN.gets.chomp + ".csv"
-  file = File.open(filename, "w")
-  # iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:height], student[:cob]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  File.open(filename, "w") do |file|
+    # iterate over the array of students
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort], student[:height], student[:cob]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
+  #file.close
   puts "File has been saved as: #{filename}"
 end
 
 def load_students( filename = get_filename )
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort, height, cob = line.chomp.split(',')
-    update_students(name, cohort.to_sym, height.to_i, cob)
+  File.open(filename, "r") do |file|
+    file.readlines.each do |line|
+      name, cohort, height, cob = line.chomp.split(',')
+      update_students(name, cohort.to_sym, height.to_i, cob)
+    end
   end
-  file.close
+  #file.close
 end
 
 def get_filename
